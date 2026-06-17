@@ -30,7 +30,7 @@ jobs:
 
       - name: Tag image
         run: |
-          docker tag nodejs-devops:latest 949449004484.dkr.ecr.ap-south-1.amazonaws.com/nodejs-devops:latest
+          docker tag nodejs-devops:latest $ECR_REGISTRY/nodejs-devops:latest
      
       - name: Push Image
         run: |
