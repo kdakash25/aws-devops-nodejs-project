@@ -28,10 +28,8 @@ jobs:
         run: |
           docker build -t nodejs-devops ./app
 
-      - name: Tag Image
-        run: |
-          docker tag nodejs-devops:latest \
-          ${{ secrets.ECR_URI }}:latest
+      - name: Tag Docker image
+        run: docker tag nodejs-devops:latest 949449004484.dkr.ecr.ap-south-1.amazonaws.com/nodejs-devops:latest
 
       - name: Push Image
         run: |
