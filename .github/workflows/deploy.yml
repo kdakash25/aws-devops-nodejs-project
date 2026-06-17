@@ -1,0 +1,45 @@
+name: Deploy Node.js App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ap-south-1
+
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Image
+        run: |
+          docker build -t nodejs-devops ./app
+
+      - name: Tag Image
+        run: |
+          docker tag nodejs-devops:latest \
+          ${{ secrets.ECR_URI }}:latest
+
+      - name: Push Image
+        run: |
+          docker push ${{ secrets.ECR_URI }}:latest
+
+      - name: Deploy ECS
+        run: |
+          aws ecs update-service \
+          --cluster nodejs-cluster \
+          --service nodejs-service \
+          --force-new-deployment
