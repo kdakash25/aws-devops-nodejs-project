@@ -33,13 +33,15 @@ steps:
     run: |
       docker build -t nodejs-devops ./app
 
-  - name: Tag Docker Image
+  - name: Tag Image
     run: |
-      docker tag nodejs-devops:latest ${{ secrets.ECR_URI }}:latest
+      docker tag nodejs-devops:latest \
+      $ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com/nodejs-devops:latest
 
-  - name: Push Docker Image
+  - name: Push Image
     run: |
-      docker push ${{ secrets.ECR_URI }}:latest
+      docker push \
+      $ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com/nodejs-devops:latest
 
   - name: Deploy to ECS
     run: |
